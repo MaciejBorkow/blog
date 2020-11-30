@@ -1,0 +1,15 @@
+files structure:
+Docker files
+-I assume that docker is integrated part of code base
+and this is why docker-compose.yml and Dockerfiles are on
+the same level as code, not in a separate folder. It makes
+easier running command such as `docker-compose run` itp.
+and run it from makefiles.
+- Work required to make a docker environment as pluggable
+directory cost more effort than it benefits development.
+
+TODO:
+DONE - refactor dockerfiles to root folder
+- save and read image in backend
+- command to do dummy data - insert dummy data
+

@@ -120,5 +120,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+IMAGES_ROOT = "/backend/blog_crm/blog/static/images"
 
 ALLOWED_HOSTS = ['0.0.0.0',]
