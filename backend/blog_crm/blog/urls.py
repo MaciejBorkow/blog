@@ -1,7 +1,8 @@
 from rest_framework import routers
 
-from blog.views import ArticleViewSet
+from blog import views
 
 
 router = routers.DefaultRouter()
-router.register(r'articles', ArticleViewSet)
+router.register(r'articles', views.ArticleViewSet)
+
