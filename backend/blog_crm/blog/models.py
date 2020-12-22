@@ -1,22 +1,17 @@
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 
 
 class Article(models.Model):
-    title = models.CharField(max_length=50)
-    body = models.TextField()
+    title = models.CharField(max_length=50, blank=True)
+    body = models.TextField(blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
-
-class Image(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
-    data = models.ImageField(upload_to='article_images')
+    background = models.ImageField(upload_to='article_images', null=True)
+    published = models.BooleanField(default=False)
 
 
 class Tag(models.Model):
     name = models.CharField(max_length=20)
-    articles = models.ManyToManyField(Article)
+    articles = models.ManyToManyField(Article, related_name='tags')

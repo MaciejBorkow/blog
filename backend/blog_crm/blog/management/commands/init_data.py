@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from faker import Faker
 
-from blog.models import Article
+from blog.models import Article, Tag
 
 
 class Command(BaseCommand):
@@ -22,11 +22,17 @@ class Command(BaseCommand):
         for i in range(10):
             users.append(User.objects.create_user(fake.name(), fake.email(), 'fakepassword'))
 
+        # Tags
+        tags = [Tag.objects.create(name=fake.word()) for _ in range(10)]
+
         # Articles
         for i, user in enumerate(users):
-            Article.objects.create(
-                title=fake.text(15).title(),
-                body=fake.text(500),
-                author=user,
-                background_uri=os.path.join('static/images/', str(i)+'.jpg')
-            )
+            for i in range(3):
+                article = Article.objects.create(
+                    title=fake.text(15).title(),
+                    body=fake.text(500),
+                    author=user,
+                )
+                article.tag_set.add(*tags)
+
+

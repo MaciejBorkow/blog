@@ -1,42 +1,50 @@
-import uuid
-
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework import viewsets, views
+from rest_framework import viewsets, generics
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import parsers
-from faker import Faker
+from rest_framework import status
 
-from blog.models import Article
-from blog.serializers import ArticlesSerializer
+from blog.models import Article, Tag
+from blog.serializers import ArticlesSerializer, TagSerializer
 
-fake = Faker()
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticlesSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
-class ArticlePostView(views.APIView):
-    parser_classes = [parsers.MultiPartParser, parsers.JSONParser]
-    def get(self, request):
-        queryset = Article.objects.all()
-        serializer = ArticlesSerializer(queryset, many=True)
+    @action(methods=['delete'], detail=True)
+    def background(self, request, pk=None):
+        article = self.get_object()
+        if article.background:
+            article.background.delete()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=True)
+    def tags(self, requset, pk=None):
+        article = self.get_object()
+        serializer = TagSerializer(instance=article.tags, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
-        return Response({'yes': 'yes'})
 
+class ArticleTagsView(generics.GenericAPIView):
+    queryset = Article.objects.all()
+    lookup_url_kwarg = 'article_id'
 
-@csrf_exempt
-def file_view(request):
-    file_name = str(uuid.uuid4()) + '.jpg'
-    file = SimpleUploadedFile(name=file_name, content=request.body, content_type='image/png')
-    a = Article.objects.create(
-        title=fake.text(max_nb_chars=12),
-        body=fake.paragraph(nb_sentences=15),
-        image=file,
-    )
-    return JsonResponse({'id': a.id})
+    def put(self, request, *args, **kwargs):
+        article = self.get_object()
+        article.tags.add(kwargs['tag_id'])
+        return Response(status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        article = self.get_object()
+        article.tags.remove(kwargs['tag_id'])
+        return Response(status.HTTP_200_OK)
