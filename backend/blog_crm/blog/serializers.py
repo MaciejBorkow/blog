@@ -10,16 +10,19 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username']
 
 
-class TagSerializer(serializers.ModelSerializer):
+class TagSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Tag
-        fields = ['id', 'name']
+        fields = ['id', 'url', 'name']
 
 
-class ArticlesSerializer(serializers.ModelSerializer):
+class ArticlesSerializer(serializers.HyperlinkedModelSerializer):
     author = UserSerializer(read_only=True)
-    tags = serializers.PrimaryKeyRelatedField(many=True, queryset=models.Tag.objects.all())
+    tags = TagSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Article
-        fields = ['id', 'title', 'body', 'background', 'author', 'published', 'tags']
+        fields = [
+            'id', 'url', 'title', 'body', 'background',
+            'author', 'published', 'tags', 'created', 'updated',
+        ]
