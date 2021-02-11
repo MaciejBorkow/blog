@@ -13,5 +13,6 @@ router.register(r'tag', views.TagViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
     path('article/<int:article_id>/tag/<int:tag_id>/', views.ArticleAddDeleteTagsView.as_view()),
+    path('index', views.home_view, name='index')
 ]
-a = 1
+

@@ -15,3 +15,5 @@ class Article(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=20)
     articles = models.ManyToManyField(Article, related_name='tags')
+
+

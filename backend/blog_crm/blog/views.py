@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from rest_framework import viewsets, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -53,3 +54,7 @@ class ArticleAddDeleteTagsView(generics.GenericAPIView):
         article = self.get_object()
         article.tags.remove(kwargs['tag_id'])
         return Response(status.HTTP_200_OK)
+
+
+def home_view(request):
+    return render(request, 'blog/index.html')
