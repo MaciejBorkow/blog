@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 
 class Article(models.Model):
@@ -17,3 +18,9 @@ class Tag(models.Model):
     articles = models.ManyToManyField(Article, related_name='tags')
 
 
+class Keyword(models.Model):
+    name = models.CharField(max_length=123)
+
+
+class Policy(models.Model):
+    keywords = ArrayField(models.CharField(max_length=12), default=list)
