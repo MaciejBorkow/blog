@@ -6,4 +6,3 @@ COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
 WORKDIR /backend/blog_crm
-EXPOSE 8000
