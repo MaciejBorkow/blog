@@ -3,3 +3,5 @@
 *__pycache__*
 venv/
 *media
+backend/blog_crm/debug.log
+db/logs/*

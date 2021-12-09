@@ -34,5 +34,3 @@ class Command(BaseCommand):
                     author=user,
                 )
                 article.tag_set.add(*tags)
-
-

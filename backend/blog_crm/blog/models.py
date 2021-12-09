@@ -23,4 +23,4 @@ class Keyword(models.Model):
 
 
 class Policy(models.Model):
-    keywords = ArrayField(models.CharField(max_length=12), default=list)
+    keyword_legacy = ArrayField(models.CharField(max_length=12), default=list)

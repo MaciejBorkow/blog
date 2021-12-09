@@ -7,6 +7,10 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./db/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./db/logs:/var/log/postgresql
+    command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
   backend:
     ports:
     - "8111:8000"
@@ -15,6 +19,9 @@ services:
     build:
       context: backend/
       dockerfile: Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
     env_file:
       - .env
     depends_on:
